@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    
+    <record id="view_product_template_form" model="ir.ui.view">
+        <field name="name">view.product.template.form</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="product.product_template_form_view"/>
+        <field name="arch" type="xml">
+
+            <xpath expr="//div[@name='options']" position="inside">
+                <div name="FE" invisible="1">
+                    <span name="custom_product" class="d-inline-block">
+                        <div>
+                            <field name="custom_product"/>
+                            <label for="custom_product"/>
+                        </div>
+                    </span>
+                    <span name="component_product" class="d-inline-block">
+                        <div>
+                            <field name="component_product"/>
+                            <label for="component_product"/>
+                        </div>
+                    </span>
+                </div>
+                <div class="mt-2">
+                    <field name="fe_product_type" widget="radio" options="{'horizontal': true}"/>
+                </div>
+            </xpath>
+
+            <xpath expr="//notebook" position="inside">
+                <page string="Paramètres techniques (FE)" name="technical_parameters" invisible="(fe_product_type == 'normal_product')">
+                    <group string="paramètres produits personnalisable" invisible="custom_product != True" >
+                        <group>
+                            <!-- Ajoutez ici les champs que vous souhaitez afficher dans l'onglet -->
+                            <field name="fe_product_categ" />
+                            <!-- etc. -->
+                        </group>
+                        <group>
+                        </group>
+                    </group>
+                    <group string="paramètres composants" invisible="component_product != True" >
+                        <group>
+                            <field name="fe_component_categ"/>
+                            <field name="laize" invisible="fe_component_categ !='tissu'" />
+                        </group>
+                        <group>
+                        </group>
+                    </group>
+
+                </page>
+            </xpath>
+        </field>
+    </record>
+
+
+    <!-- View product.template tree -->
+    <record id="view_product_template_tree" model="ir.ui.view">
+        <field name="name">view.product.template.tree</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="product.product_template_tree_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='default_code']" position="after">
+                <field name="fe_product_categ"/>
+            </xpath>
+        </field>
+    </record>
+
+
+    <!-- View product.template search -->
+    <record id="view_product_template_search" model="ir.ui.view">
+        <field name="name">view.product.template.search</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="product.product_template_search_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//filter[last()]" position="after">
+                <separator/>
+                <filter string="Rideaux" name="filter_rideau" domain="[('fe_product_categ', '=', 'rideau')]"/>
+                <filter string="Linge de table" name="filter_linge_de_table" domain="[('fe_product_categ', '=', 'linge_de_table')]"/>
+                <filter string="Mobilier" name="filter_mobilier" domain="[('fe_product_categ', '=', 'mobilier')]"/>
+                <separator/>
+            </xpath>
+
+            <xpath expr="//filter[@name='categ_id']" position="after">
+                <filter string="Catég Prod FE" name="fe_product_categ" context="{'group_by': 'fe_product_categ'}"/>
+            </xpath>        
+        
+        </field>
+    </record>
+
+</odoo>

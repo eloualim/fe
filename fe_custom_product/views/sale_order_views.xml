@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_order_form_custom" model="ir.ui.view">
+        <field name="name">sale.order.form.custom</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_form" />
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='order_line']/tree" position="inside">
+                <button name="action_open_order_line_form" type="object" string="Edit" class="oe_highlight" invisible="fe_product_type != 'custom_product'"/>
+                <field name="fe_product_type" invisible='1' />
+            </xpath>
+        </field>
+    </record>
+</odoo>
