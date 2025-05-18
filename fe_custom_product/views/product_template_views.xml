@@ -46,6 +46,16 @@
                         <group>
                         </group>
                     </group>
+                    <group string="paramètres linge de lit"  >
+                        <field name="fe_confection_config_line_ids">
+                            <tree editable="bottom">
+                                <field name="confection_type_id"/>
+                                <field name="conso_tissu"/>
+                                <field name="conso_facon"/>
+                            </tree>
+                        </field>
+
+                    </group>
 
                 </page>
             </xpath>

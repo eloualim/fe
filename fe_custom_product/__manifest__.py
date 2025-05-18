@@ -12,9 +12,13 @@
         'sale',
     ],
     "data": [
+        "views/fe_confection_line_views.xml",
+        "views/fe_confection_type_views.xml",
         "views/product_template_views.xml",
-        'views/sale_order_views.xml',
-        'views/sale_order_line_views.xml',
+        "views/sale_order_line_views.xml",
+        "views/sale_order_views.xml",
+        'security/security.xml',
+        "security/ir.model.access.csv",
     ],
     'demo': [
         ''

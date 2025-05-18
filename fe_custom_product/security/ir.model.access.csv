@@ -1,0 +1,5 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_fe_confection_type_user,fe_confection_type_user,model_fe_confection_type,group_fe_confection_user,1,0,0,0
+access_fe_confection_line_user,fe_confection_line_user,model_fe_confection_line,group_fe_confection_user,1,0,0,0
+access_fe_confection_type_manager,fe_confection_type_manager,model_fe_confection_type,group_fe_confection_manager,1,1,1,1
+access_fe_confection_line_manager,fe_confection_line_manager,model_fe_confection_line,group_fe_confection_manager,1,1,1,1

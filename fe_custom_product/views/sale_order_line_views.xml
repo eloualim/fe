@@ -12,7 +12,6 @@
                             <field name="largeur_rideau" />
                             <field name="hauteur_rideau" />
                             <field name="tissu_id" />
-                            <field name="rideau_style" />
                             <field name="tringle_id" />
                             <field name="facon_id" />
                             <field name="pose_id" />
@@ -20,20 +19,27 @@
                         <group>
                             <field name="laize"  readonly='1' />
                             <field name="panel_nbr" />
-                            <field name="largeur_tissu" />
                             <field name="ampleur_rideau" />
+                            <field name="usr_panel_nbr" />
+                            <field name="usr_ampleur_rideau" invisible='usr_panel_nbr == 0'/>
                         </group>
                     </group>
                     <group name="linge_de_table" string="Linge de table" invisible="fe_product_categ != 'linge_de_table'">
                         <group>
                             <field name="longueur_linge" />
                             <field name="largeur_linge" />
+                            <field name="chute_nappe" />
+                            <field name="ourlet_nappe" />
                             <field name="tissu_id" />
                             <field name="facon_id" />
                         </group>
                         <group>
                             <field name="laize"  readonly='1' />
-
+                            <field name="optim_forced" />
+                            <field name="longueur_coupe" />
+                            <field name="largeur_coupe" />
+                            <field name="longueur_corrig" />
+                            <field name="largeur_corrig" />
                         </group>
                     </group>
                     <group name="mobilier" string="Mobilier" invisible="fe_product_categ != 'mobilier'">
