@@ -29,6 +29,92 @@ class SaleOrderLine(models.Model):
         string=_('Ourlet rideau en (m)'),
     )
 
+    tringle_id = fields.Many2one(
+        comodel_name='product.template',
+        string=_('Tringle'),
+        domain=[('fe_component_categ', '=', 'tringle')],
+    )
+    pose_id = fields.Many2one(
+        comodel_name='product.template',
+        string=_('Pose'),
+        domain=[('fe_component_categ', '=', 'pose')],
+    )
+
+    facon_id = fields.Many2one(
+        comodel_name='product.template',
+        string=_('Confection'),
+        domain=[('fe_component_categ', '=', 'facon')],
+    )
+
+    # Champs calculés pour les rideaux
+    panel_nbr = fields.Integer(
+        string='Nombre de panneaux',
+        help='Nombre de panneaux nécessaires',
+        compute='_compute_panel_nbr',
+    )
+
+    usr_largeur_tissu = fields.Float(
+        string='Ampleur rideau',
+        help='Ampleur du rideau',
+        compute='_compute_panel_nbr',
+    )
+
+    usr_panel_nbr = fields.Float(
+        string='Nombre de panneaux utilisateur',
+        help='Nombre de panneaux nécessaires',
+    )
+
+    usr_ampleur_rideau = fields.Float(
+        string='Ampleur rideau',
+        help='Ampleur du rideau',
+        compute='_compute_panel_nbr',
+    )
+    
+    ampleur_rideau = fields.Float(
+        string='Ampleur rideau',
+        help='Ampleur du rideau',
+        compute='_compute_panel_nbr',
+    )
+
+
+    largeur_tissu = fields.Float(
+        string='Largeur tissu',
+        help='Largeur du tissu',
+        compute='_compute_panel_nbr',
+    )    
+    
+
+    # Configuration des rideaux
+    simple_paire = fields.Selection([
+            ('simple', _('Simple')),
+            ('paire', _('Paire')),
+            ('overlap', _('Paire Overlap')),
+        ],
+        string=_('Simple ou paire'),
+        default='paire',
+    )
+
+    longueur_coupe = fields.Float(
+        string='Longueur coupe',
+        compute='_compute_panel_nbr',
+    )
+    
+    largeur_coupe = fields.Float(
+        string='Largeur coupe',
+        compute='_compute_panel_nbr',
+    )
+
+
+    longueur_corrig = fields.Float(
+        string='Longueur corrigée',
+    )
+
+    largeur_corrig = fields.Float(
+        string='Largeur corrigée',
+    )
+
+
+
     # Champs pour le linge de table
     longueur_linge = fields.Float(
         string=_('Longueur en (cm)'),
@@ -66,7 +152,18 @@ class SaleOrderLine(models.Model):
         string=_('Largeur meuble en (cm)'),
     )
 
-    # Champs relatifs aux composants
+    # Champs relatifs aux linge de lit
+
+
+    confection_type_id = fields.Many2one(
+        string=_('Confection_type_id'),
+        comodel_name='fe.confection.type',
+    )
+
+
+
+
+    # Champs relatifs aux composants (commun à tous les types de produits)
     laize = fields.Float(
         string=_('Laize'),
         related='tissu_id.laize',
@@ -77,88 +174,7 @@ class SaleOrderLine(models.Model):
         string=_('Tissu'),
         domain=[('fe_component_categ', '=', 'tissu')],
     )
-
-    tringle_id = fields.Many2one(
-        comodel_name='product.template',
-        string=_('Tringle'),
-        domain=[('fe_component_categ', '=', 'tringle')],
-    )
     
-    pose_id = fields.Many2one(
-        comodel_name='product.template',
-        string=_('Pose'),
-        domain=[('fe_component_categ', '=', 'pose')],
-    )
-
-    facon_id = fields.Many2one(
-        comodel_name='product.template',
-        string=_('Confection'),
-        domain=[('fe_component_categ', '=', 'facon')],
-    )
-
-    # Configuration des rideaux
-    simple_paire = fields.Selection([
-            ('simple', _('Simple')),
-            ('paire', _('Paire')),
-            ('overlap', _('Paire Overlap')),
-        ],
-        string=_('Simple ou paire'),
-        default='paire',
-    )
-
-    # Champs calculés pour les rideaux
-    panel_nbr = fields.Integer(
-        string='Nombre de panneaux',
-        help='Nombre de panneaux nécessaires',
-        compute='_compute_panel_nbr',
-    )
-
-    largeur_tissu = fields.Float(
-        string='Largeur tissu',
-        help='Largeur du tissu',
-        compute='_compute_panel_nbr',
-    )    
-    
-    ampleur_rideau = fields.Float(
-        string='Ampleur rideau',
-        help='Ampleur du rideau',
-        compute='_compute_panel_nbr',
-    )
-    usr_panel_nbr = fields.Float(
-        string='Nombre de panneaux utilisateur',
-        help='Nombre de panneaux nécessaires',
-    )
-
-    usr_largeur_tissu = fields.Float(
-        string='Ampleur rideau',
-        help='Ampleur du rideau',
-        compute='_compute_panel_nbr',
-    )
-
-    usr_ampleur_rideau = fields.Float(
-        string='Ampleur rideau',
-        help='Ampleur du rideau',
-        compute='_compute_panel_nbr',
-    )
-
-    longueur_coupe = fields.Float(
-        string='Longueur coupe',
-        compute='_compute_panel_nbr',
-    )
-    
-    largeur_coupe = fields.Float(
-        string='Largeur coupe',
-        compute='_compute_panel_nbr',
-    )
-
-
-    longueur_corrig = fields.Float(
-        string='Longueur corrigée',
-    )
-
-    largeur_corrig = fields.Float(
-        string='Largeur corrigée',
-    )
 
     custom_price_used = fields.Boolean(string='Prix personnalisé utilisé', default=False)
     stored_custom_price = fields.Float(string='Prix personnalisé stocké')
@@ -176,25 +192,6 @@ class SaleOrderLine(models.Model):
             # Restauration du prix personnalisé
             if line.custom_price_used:
                 line.price_unit = line.stored_custom_price
-
-
-    def action_open_order_line_form(self):
-        """Ouvre le formulaire de modification de la ligne de commande et enregistre le devis."""
-        self.ensure_one()
-        
-        return {
-            'type': 'ir.actions.act_window',
-            'name': _('Edit Sale Order Line'),
-            'res_model': 'sale.order.line',
-            'view_mode': 'form',
-            'views': [(self.env.ref('fe_custom_product.view_sale_order_line_form_custom').id, 'form')],
-            'res_id': self.id,
-            'target': 'new',
-            'context': {
-                'ignore_readonly_fields': True,
-                'force_edit': True
-            }
-        }
 
     @api.depends('tissu_id', 'facon_id', 'tringle_id', 'pose_id', 'simple_paire','largeur_rideau', 'hauteur_rideau')
     def _compute_name(self):
@@ -234,13 +231,6 @@ class SaleOrderLine(models.Model):
                 else:
                     line.name = _('Rideaux')
 
-
-
-
-
-
-
-
             elif line.fe_product_categ == 'linge_de_table':
                 line.name = _('{}, {}, {}x{}cm, {}').format(
                     line.product_id.name or _('N/A'),
@@ -248,6 +238,13 @@ class SaleOrderLine(models.Model):
                     line.longueur_linge or 0,
                     line.largeur_linge or 0,
                     line.facon_id.name or "",
+                )
+
+            elif line.fe_product_categ == 'linge_de_lit':
+                line.name = _('{}, {}, {}').format(
+                    line.product_id.name or _('N/A'),
+                    line.tissu_id.name or _('N/A'),
+                    line.confection_type_id.name or _('N/A'),
                 )
             elif line.fe_product_categ == 'mobilier':
                 line.name = _('Mobilier - Tringle: {}').format(
@@ -257,8 +254,16 @@ class SaleOrderLine(models.Model):
                 # Utilisation de la méthode originale
                 super(SaleOrderLine, line)._compute_name()
 
-    @api.onchange('tissu_id', 'facon_id', 'tringle_id', 'pose_id', 'simple_paire','largeur_rideau', 'hauteur_rideau','usr_panel_nbr','optim_forced','longueur_linge','largeur_linge','chute_nappe','ourlet_nappe','longueur_corrig','largeur_corrig')
-    @api.depends('tissu_id', 'facon_id', 'tringle_id', 'pose_id', 'simple_paire','largeur_rideau', 'hauteur_rideau','usr_panel_nbr','optim_forced','longueur_linge','largeur_linge','chute_nappe','ourlet_nappe','longueur_corrig','largeur_corrig')
+    @api.onchange(  'tissu_id', 'facon_id', 'tringle_id', 'pose_id', 
+                    'simple_paire','largeur_rideau', 'hauteur_rideau',
+                    'usr_panel_nbr','optim_forced','longueur_linge',
+                    'largeur_linge','chute_nappe','ourlet_nappe',
+                    'longueur_corrig','largeur_corrig')
+    @api.depends(   'tissu_id', 'facon_id', 'tringle_id', 'pose_id', 
+                    'simple_paire','largeur_rideau', 'hauteur_rideau',
+                    'usr_panel_nbr','optim_forced','longueur_linge',
+                    'largeur_linge','chute_nappe','ourlet_nappe',
+                    'longueur_corrig','largeur_corrig')
     def _compute_panel_nbr(self):
         """Calcule le nombre de panneaux et l'ampleur pour les rideaux."""
         for line in self:
@@ -417,6 +422,11 @@ class SaleOrderLine(models.Model):
             # prix_facon = perimetre * coefficient * self.facon_id.list_price
             return prix_facon
             
+            
+        elif category_type == 'linge_de_lit':
+            # pour le linge de lit 
+            return prix_facon
+            
         # Pour les autres catégories, retourner 0
         return 0
 
@@ -447,3 +457,23 @@ class SaleOrderLine(models.Model):
             
         # Pour les autres catégories, retourner 0
         return 0
+    
+
+    def action_open_order_line_form(self):
+        """Ouvre le formulaire de modification de la ligne de commande et enregistre le devis."""
+        self.ensure_one()
+        
+        return {
+            'type': 'ir.actions.act_window',
+            'name': _('Edit Sale Order Line'),
+            'res_model': 'sale.order.line',
+            'view_mode': 'form',
+            'views': [(self.env.ref('fe_custom_product.view_sale_order_line_form_custom').id, 'form')],
+            'res_id': self.id,
+            'target': 'new',
+            'context': {
+                'ignore_readonly_fields': True,
+                'force_edit': True
+            }
+        }
+

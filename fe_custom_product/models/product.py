@@ -11,7 +11,7 @@ class ProductTemplate(models.Model):
         ('linge_de_table', _('Linge de table')),
         ('linge_de_lit', _('Linge de lit')),
         ('mobilier', _('Mobilier')),
-    ], string=_('FE Product Type'))
+    ], string=_('FE Product Category'))
     
     fe_component_categ = fields.Selection([
         ('tissu', _('Tissu')),

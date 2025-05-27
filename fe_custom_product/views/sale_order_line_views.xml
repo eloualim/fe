@@ -42,6 +42,15 @@
                             <field name="largeur_corrig" />
                         </group>
                     </group>
+                    <group name="linge_de_table" string="Linge de Lit" invisible="fe_product_categ != 'linge_de_lit'">
+                        <group>
+                            <field name="tissu_id" />
+                            <field name="confection_type_id" />
+                        </group>
+                        <group>
+                            <field name="laize"  readonly='1' />
+                        </group>
+                    </group>
                     <group name="mobilier" string="Mobilier" invisible="fe_product_categ != 'mobilier'">
                         <group>
                             <field name="largeur_meuble" />
@@ -54,6 +63,7 @@
                     </group>
                     <group name="pricing" string="Pricing" >
                         <group>
+                            <field name="name" />
                             <field name="price_unit" />
                         </group>
                         <group>
